@@ -13,7 +13,8 @@ public class Target : MonoBehaviour
     {
         None,
         Left,
-        Right
+        Right,
+        Last = Right,
     }
     public Direction MoveDirection { get; set; }
 
@@ -34,7 +35,6 @@ public class Target : MonoBehaviour
 
     void Move()
     {
-
         if (MoveDirection == Direction.Left)
         {
             transform.Translate(-m_speed * Time.deltaTime, 0, 0);
@@ -63,6 +63,7 @@ public class Target : MonoBehaviour
         hitsNeeded--;
         if (hitsNeeded <= 0)
         {
+            GameManager.Instance.AddScore(ScoreValue);
             Destroy(gameObject);
         }
     }
