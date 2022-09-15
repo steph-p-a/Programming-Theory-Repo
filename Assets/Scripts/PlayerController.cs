@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     private const float projectileSpeed = 10.0f;
     private const float azimuthMin = -60.0f;
     private const float azimuthMax = 60.0f;
-    private const float elevationMin = 30.0f;
+    private const float elevationMin = 40.0f;
     private const float elevationMax = 90.0f;
 
     private Vector2 m_RotationInput;
