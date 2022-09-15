@@ -13,6 +13,10 @@ public class PlayerController : MonoBehaviour
 
     private Transform muzzle;
     private const float projectileSpeed = 10.0f;
+    private const float azimuthMin = -60.0f;
+    private const float azimuthMax = 60.0f;
+    private const float elevationMin = 30.0f;
+    private const float elevationMax = 90.0f;
 
     private Vector2 m_RotationInput;
     private Vector2 m_Rotation;
@@ -55,7 +59,9 @@ public class PlayerController : MonoBehaviour
         var scaledAzimuthSpeed = azimuthSpeed * Time.deltaTime;
 
         m_Rotation.y += rotationInput.x * scaledAzimuthSpeed;
-        m_Rotation.x += rotationInput.y * scaledElevationSpeed;
+        m_Rotation.y = Mathf.Clamp(m_Rotation.y, azimuthMin, azimuthMax);
+        m_Rotation.x += rotationInput.y * scaledElevationSpeed;        
+        m_Rotation.x = Mathf.Clamp(m_Rotation.x, elevationMin, elevationMax);
 
         transform.localEulerAngles = m_Rotation;
     }
