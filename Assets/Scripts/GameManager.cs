@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject[] targetPrefabs;
     private readonly float[] m_targetXPositions = { -3.5f, -2.5f, -1.5f, -0.5f, 0.5f, 1.5f, 2.5f, 3.5f };
     private readonly float[] m_targetYPositions = { 1.0f, 2.0f, 3.0f };
-    private const float m_targetZPosition = 4.92f;
+    private const float TargetZPosition = 4.92f;
 
     private void Awake()
     {
@@ -52,7 +50,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (float x in m_targetXPositions)
             {
-                var targetGameObject = Instantiate(targetPrefabs[0], new Vector3(x, y, m_targetZPosition), targetPrefabs[0].transform.rotation);
+                var targetGameObject = Instantiate(targetPrefabs[0], new Vector3(x, y, TargetZPosition), targetPrefabs[0].transform.rotation);
                 var target = targetGameObject.GetComponent<Target>();
 
                 if (target)

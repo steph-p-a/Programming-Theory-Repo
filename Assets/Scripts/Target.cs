@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Target : MonoBehaviour
-{  
+{
     private int m_targetXP = 1;
     public int TargetXP
     {
