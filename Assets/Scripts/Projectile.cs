@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private const float m_projectileLifetime = 1.0f;
+    private const float ProjectileLifetime = 1.0f;
 
     private IEnumerator m_removeProjectile;
 
     // Start is called before the first frame update
     void Start()
     {
-        m_removeProjectile = DestroyAfter(m_projectileLifetime);
+        m_removeProjectile = DestroyAfter(ProjectileLifetime);
 
         StartCoroutine(m_removeProjectile);
     }
