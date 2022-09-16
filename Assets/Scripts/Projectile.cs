@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private const float projectileLifetime = 1.0f;
+    private const float m_projectileLifetime = 1.0f;
 
-    private IEnumerator removeProjectile;
+    private IEnumerator m_removeProjectile;
 
     // Start is called before the first frame update
     void Start()
     {
-        removeProjectile = DestroyAfter(projectileLifetime);
+        m_removeProjectile = DestroyAfter(m_projectileLifetime);
 
-        StartCoroutine(removeProjectile);
+        StartCoroutine(m_removeProjectile);
     }
 
-    private IEnumerator DestroyAfter(float lifetime)
+    IEnumerator DestroyAfter(float lifetime)
     {
         yield return new WaitForSeconds(lifetime);
         Destroy(gameObject);
     }
-
 }

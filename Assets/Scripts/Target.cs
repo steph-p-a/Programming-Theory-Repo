@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Target : MonoBehaviour
-{
-    protected int hitsNeeded = 1;
-    private const float m_speed = 1.0f;
-    private const float m_leftBoundary = -4.5f;
-    private const float m_rightBoundary = 4.5f;
+{  
+    private int m_targetXP = 1;
+    public int TargetXP
+    {
+        get { return m_targetXP; }
+        protected set { m_targetXP = value; }
+    }
 
+    private int m_targetHP = 1;
+    public int TartgetHP
+    {
+        get { return m_targetHP; }
+        protected set { m_targetHP = value; }
+    }
     public enum Direction
     {
         None,
@@ -19,13 +27,9 @@ public class Target : MonoBehaviour
     public Direction MoveDirection { get; set; }
 
 
-    private int m_ScoreValue = 1;
-
-    public int ScoreValue
-    {
-        get { return m_ScoreValue; }
-        protected set { m_ScoreValue = value; }
-    }
+    private const float m_speed = 1.0f;
+    private const float m_leftBoundary = -4.5f;
+    private const float m_rightBoundary = 4.5f;
 
     // Update is called once per frame
     void Update()
@@ -53,18 +57,25 @@ public class Target : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         Hit();
     }
 
     protected void Hit()
     {
-        hitsNeeded--;
-        if (hitsNeeded <= 0)
+        m_targetHP--;
+        LoseHP(1);
+        if (m_targetHP <= 0)
         {
-            GameManager.Instance.AddScore(ScoreValue);
+            GameManager.Instance.AddScore(TargetXP);
             Destroy(gameObject);
         }
+    }
+
+    // The inherited classes will overload LoseHP
+    protected void LoseHP(int hp)
+    {
+        // The base class does not implement this
     }
 }

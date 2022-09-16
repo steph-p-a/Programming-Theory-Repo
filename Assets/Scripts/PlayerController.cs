@@ -11,12 +11,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject projectilePrefab;
 
 
-    private Transform muzzle;
-    private const float projectileSpeed = 10.0f;
-    private const float azimuthMin = -60.0f;
-    private const float azimuthMax = 60.0f;
-    private const float elevationMin = 40.0f;
-    private const float elevationMax = 90.0f;
+    private Transform m_muzzle;
+    private const float m_projectileSpeed = 10.0f;
+    private const float m_azimuthMin = -60.0f;
+    private const float m_azimuthMax = 60.0f;
+    private const float m_elevationMin = 40.0f;
+    private const float m_elevationMax = 90.0f;
 
     private Vector2 m_RotationInput;
     private Vector2 m_Rotation;
@@ -27,10 +27,10 @@ public class PlayerController : MonoBehaviour
     {
         m_Rotation = new Vector2(transform.localEulerAngles.x, transform.localEulerAngles.y);
 
-        muzzle = GameObject.Find("Muzzle").GetComponent<Transform>();
-        if (muzzle == null)
+        m_muzzle = GameObject.Find("Muzzle").GetComponent<Transform>();
+        if (m_muzzle == null)
         {
-            Debug.Log("Missing Muzzle GameObject");
+            Debug.LogError("Missing Muzzle GameObject");
         }
     }
 
@@ -59,20 +59,27 @@ public class PlayerController : MonoBehaviour
         var scaledAzimuthSpeed = azimuthSpeed * Time.deltaTime;
 
         m_Rotation.y += rotationInput.x * scaledAzimuthSpeed;
-        m_Rotation.y = Mathf.Clamp(m_Rotation.y, azimuthMin, azimuthMax);
-        m_Rotation.x += rotationInput.y * scaledElevationSpeed;        
-        m_Rotation.x = Mathf.Clamp(m_Rotation.x, elevationMin, elevationMax);
+        m_Rotation.y = Mathf.Clamp(m_Rotation.y, m_azimuthMin, m_azimuthMax);
+        m_Rotation.x += rotationInput.y * scaledElevationSpeed;
+        m_Rotation.x = Mathf.Clamp(m_Rotation.x, m_elevationMin, m_elevationMax);
 
         transform.localEulerAngles = m_Rotation;
     }
 
     private void Fire()
     {
-        if (projectilePrefab != null && muzzle != null)
+        if (projectilePrefab != null && m_muzzle != null)
         {
-            var newProjectile = Instantiate(projectilePrefab);
-            newProjectile.transform.SetPositionAndRotation(muzzle.position, muzzle.rotation);
-            newProjectile.GetComponent<Rigidbody>().AddForce(newProjectile.transform.up * projectileSpeed, ForceMode.VelocityChange);
+            var newProjectile = Instantiate(projectilePrefab, m_muzzle.position, m_muzzle.rotation);
+            var newProjectileRb = newProjectile.GetComponent<Rigidbody>();
+            if (newProjectileRb != null)
+            {
+                newProjectile.GetComponent<Rigidbody>().AddForce(newProjectile.transform.up * m_projectileSpeed, ForceMode.VelocityChange);
+            }
+            else
+            {
+                Debug.LogError("ProjectilePrefab: " + projectilePrefab.name + " does not have a RigidBody component");
+            }
         }
     }
 

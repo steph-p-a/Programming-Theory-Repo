@@ -5,13 +5,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-    [SerializeField] GameObject[] targetPrefabs;
-
-    private readonly float[] targetXPositions = { -3.5f, -2.5f, -1.5f, -0.5f, 0.5f, 1.5f, 2.5f, 3.5f };
-    private readonly float[] targetYPositions = { 1.0f, 2.0f, 3.0f };
-    private const float targetZPosition = 4.92f;
-
     public int Score { get; private set; }
+
+    [SerializeField] GameObject[] targetPrefabs;
+    private readonly float[] m_targetXPositions = { -3.5f, -2.5f, -1.5f, -0.5f, 0.5f, 1.5f, 2.5f, 3.5f };
+    private readonly float[] m_targetYPositions = { 1.0f, 2.0f, 3.0f };
+    private const float m_targetZPosition = 4.92f;
 
     private void Awake()
     {
@@ -21,41 +20,54 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        Instance = gameObject.GetComponent<GameManager>();
+        Instance = this;
         Score = 0;
         DontDestroyOnLoad(gameObject);
+
+        // Validate that all target prefabs have the Target component
+        for (int i = 0; i < targetPrefabs.Length; i++)
+        {
+            if (targetPrefabs[i].GetComponent<Target>() == null)
+            {
+                Debug.LogError("TargetPrefab: " + targetPrefabs[i].name + " does not have the Target class");
+            }
+        }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        int row = 0;
-        foreach (float y in targetYPositions)
-        {
-            foreach (float x in targetXPositions)
-            {
-                var target = Instantiate(targetPrefabs[0], new Vector3(x, y, targetZPosition), targetPrefabs[0].transform.rotation).GetComponent<Target>();
+        CreateTargets();
+    }
 
-                if ((row % 2) == 0)
+    public void AddScore(int score)
+    {
+        Score += score;
+    }
+
+    private void CreateTargets()
+    {
+        int row = 0;
+        // Create a grid of individual targets
+        foreach (float y in m_targetYPositions)
+        {
+            foreach (float x in m_targetXPositions)
+            {
+                var targetGameObject = Instantiate(targetPrefabs[0], new Vector3(x, y, m_targetZPosition), targetPrefabs[0].transform.rotation);
+                var target = targetGameObject.GetComponent<Target>();
+
+                if (target)
                 {
-                    target.MoveDirection = Target.Direction.Left;
-                }
-                else
-                {
-                    target.MoveDirection = Target.Direction.Right;
+                    if ((row % 2) == 0)
+                    {
+                        target.MoveDirection = Target.Direction.Left;
+                    }
+                    else
+                    {
+                        target.MoveDirection = Target.Direction.Right;
+                    }
                 }
             }
             row++;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    public void AddScore(int score)
-    {
-       Score += score;
     }
 }
