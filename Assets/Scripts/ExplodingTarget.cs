@@ -6,12 +6,17 @@ public class ExplodingTarget : Target
 {
     [SerializeField] private Material altMaterial;
     [SerializeField] private GameObject explosionPrefab;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        // ExplodingTargets are worth more, and they have 2 HP!
+        TargetXP = 3;
+        TargetHP = 2;
+    }
+
     void Start()
     {
-        // ExplodingTargets are worth more, and they have 2 HP!
-        m_targetXP = 3;
-        m_targetHP = 2;
-
         if (explosionPrefab == null)
         {
             Debug.LogError("ExplodingTarget does not have an explosion prefab");
@@ -33,13 +38,13 @@ public class ExplodingTarget : Target
     public override void LoseHP(int hp)
     {
         base.LoseHP(hp);
-        if (m_targetHP <= 0)
+        if (TargetHP <= 0)
         {
             Explode();
         }
         else
         {
-            // On first hit, show the Exploding target with the altMaterial
+            // On first hit, paint the Exploding target with the altMaterial
             var mr = GetComponent<MeshRenderer>();
             if (mr && altMaterial)
             {
