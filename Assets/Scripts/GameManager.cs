@@ -22,6 +22,10 @@ public class GameManager : MonoBehaviour
         Score = 0;
         DontDestroyOnLoad(gameObject);
 
+        if (targetPrefabs.Length == 0)
+        {
+            Debug.LogError("GameManager does not have any targetPrefabs");
+        }
         // Validate that all target prefabs have the Target component
         for (int i = 0; i < targetPrefabs.Length; i++)
         {

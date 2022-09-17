@@ -9,17 +9,15 @@ public class PlayerController : MonoBehaviour
 
 
     private Transform m_muzzle;
-    private const float m_projectileSpeed = 10.0f;
-    private const float m_azimuthMin = -60.0f;
-    private const float m_azimuthMax = 60.0f;
-    private const float m_elevationMin = 40.0f;
-    private const float m_elevationMax = 90.0f;
+    private const float ProjectileSpeed = 10.0f;
+    private const float AzimuthMin = -60.0f;
+    private const float AzimuthMax = 60.0f;
+    private const float ElevationMin = 40.0f;
+    private const float ElevationMax = 90.0f;
 
     private Vector2 m_RotationInput;
     private Vector2 m_Rotation;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         m_Rotation = new Vector2(transform.localEulerAngles.x, transform.localEulerAngles.y);
@@ -29,9 +27,12 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Missing Muzzle GameObject");
         }
+        if (projectilePrefab.GetComponent<Rigidbody>() == null)
+        {
+            Debug.LogError("ProjectilePrefab: " + projectilePrefab.name + " does not have a RigidBody component");
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         Rotate(m_RotationInput);
@@ -56,9 +57,9 @@ public class PlayerController : MonoBehaviour
         var scaledAzimuthSpeed = azimuthSpeed * Time.deltaTime;
 
         m_Rotation.y += rotationInput.x * scaledAzimuthSpeed;
-        m_Rotation.y = Mathf.Clamp(m_Rotation.y, m_azimuthMin, m_azimuthMax);
+        m_Rotation.y = Mathf.Clamp(m_Rotation.y, AzimuthMin, AzimuthMax);
         m_Rotation.x += rotationInput.y * scaledElevationSpeed;
-        m_Rotation.x = Mathf.Clamp(m_Rotation.x, m_elevationMin, m_elevationMax);
+        m_Rotation.x = Mathf.Clamp(m_Rotation.x, ElevationMin, ElevationMax);
 
         transform.localEulerAngles = m_Rotation;
     }
@@ -71,13 +72,8 @@ public class PlayerController : MonoBehaviour
             var newProjectileRb = newProjectile.GetComponent<Rigidbody>();
             if (newProjectileRb != null)
             {
-                newProjectile.GetComponent<Rigidbody>().AddForce(newProjectile.transform.up * m_projectileSpeed, ForceMode.VelocityChange);
-            }
-            else
-            {
-                Debug.LogError("ProjectilePrefab: " + projectilePrefab.name + " does not have a RigidBody component");
+                newProjectileRb.AddForce(newProjectile.transform.up * ProjectileSpeed, ForceMode.VelocityChange);
             }
         }
     }
-
 }

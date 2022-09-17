@@ -2,14 +2,14 @@
 
 public class Target : MonoBehaviour
 {
-    private int m_targetXP = 1;
+    protected int m_targetXP = 1;
     public int TargetXP
     {
         get { return m_targetXP; }
         protected set { m_targetXP = value; }
     }
 
-    private int m_targetHP = 1;
+    protected int m_targetHP = 1;
     public int TartgetHP
     {
         get { return m_targetHP; }
@@ -25,9 +25,9 @@ public class Target : MonoBehaviour
     public Direction MoveDirection { get; set; }
 
 
-    private const float m_speed = 1.0f;
-    private const float m_leftBoundary = -4.5f;
-    private const float m_rightBoundary = 4.5f;
+    protected const float Speed = 1.0f;
+    private const float LeftBoundary = -4.5f;
+    private const float RightBoundary = 4.5f;
 
     // Update is called once per frame
     void Update()
@@ -39,18 +39,18 @@ public class Target : MonoBehaviour
     {
         if (MoveDirection == Direction.Left)
         {
-            transform.Translate(-m_speed * Time.deltaTime, 0, 0);
-            if (transform.position.x < m_leftBoundary)
+            transform.Translate(-Speed * Time.deltaTime, 0, 0);
+            if (transform.position.x < LeftBoundary)
             {
-                transform.position = new Vector3(m_rightBoundary, transform.position.y, transform.position.z);
+                transform.position = new Vector3(RightBoundary, transform.position.y, transform.position.z);
             }
         }
         else if (MoveDirection == Direction.Right)
         {
-            transform.Translate(m_speed * Time.deltaTime, 0, 0);
-            if (transform.position.x > m_rightBoundary)
+            transform.Translate(Speed * Time.deltaTime, 0, 0);
+            if (transform.position.x > RightBoundary)
             {
-                transform.position = new Vector3(m_leftBoundary, transform.position.y, transform.position.z);
+                transform.position = new Vector3(LeftBoundary, transform.position.y, transform.position.z);
             }
         }
     }
@@ -62,7 +62,6 @@ public class Target : MonoBehaviour
 
     protected void Hit()
     {
-        m_targetHP--;
         LoseHP(1);
         if (m_targetHP <= 0)
         {
@@ -72,8 +71,8 @@ public class Target : MonoBehaviour
     }
 
     // The inherited classes will overload LoseHP
-    protected void LoseHP(int hp)
+    public virtual void LoseHP(int hp)
     {
-        // The base class does not implement this
+        m_targetHP -= hp;
     }
 }
