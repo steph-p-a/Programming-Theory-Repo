@@ -4,10 +4,11 @@ public class MegaTarget : Target
 {
     [SerializeField] private GameObject rocketPrefab;
 
-    void Start()
+    protected override void Awake()
     {
+        base.Awake();
         // MegaTargets are worth more
-        m_targetXP = 3;
+        TargetXP = 3;
     }
 
     // Send a rocket from the 'position' in the 'direction' 
@@ -16,20 +17,28 @@ public class MegaTarget : Target
         Instantiate(rocketPrefab, position, rocketPrefab.transform.rotation).transform.Rotate(direction);
     }
 
+    Vector3 XOffset(Vector3 position, float offset)
+    {
+        return new Vector3(position.x + offset, position.y, position.z);
+    }
+
+    Vector3 YOffset(Vector3 position, float offset)
+    {
+        return new Vector3(position.x, position.y + offset, position.z);
+    }
+
     // When a MegaTarget loses all its HP, it sends rockets in four directions
     public override void LoseHP(int hp)
     {
         base.LoseHP(hp);
-        if (m_targetHP <= 0)
+        if (TargetHP <= 0)
         {
-            var left = new Vector3(transform.position.x - 0.10f, transform.position.y, transform.position.z);
-            LauchRocket(left, new Vector3(0, 0, 270));
-            var up = new Vector3(transform.position.x, transform.position.y + 0.10f, transform.position.z);
-            LauchRocket(up, new Vector3(0, 0, 0));
-            var right = new Vector3(transform.position.x + 0.10f, transform.position.y, transform.position.z);
-            LauchRocket(right, new Vector3(0, 0, 90));
-            var down = new Vector3(transform.position.x, transform.position.y - 0.10f, transform.position.z);
-            LauchRocket(down, new Vector3(0, 0, 180));
+            // Lauch the rocket just a little off the target so we don't have to check for unnecessary collisions
+            const float offset = 0.10f;
+            LauchRocket(YOffset(transform.position, offset), new Vector3(0, 0, 0));    // Up
+            LauchRocket(XOffset(transform.position, offset), new Vector3(0, 0, 90));   // Right            
+            LauchRocket(YOffset(transform.position, -offset), new Vector3(0, 0, 180)); // Down    
+            LauchRocket(XOffset(transform.position, -offset), new Vector3(0, 0, 270)); // Left
         }
     }
 }

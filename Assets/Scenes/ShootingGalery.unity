@@ -1377,6 +1377,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPrefabs:
   - {fileID: 3943811101758982868, guid: 35b7864ad5db56445827e65a650dd5e2, type: 3}
+  leftStageLimit: {fileID: 773526074}
+  rightStageLimit: {fileID: 1164951581}
+  bottomStageLimit: {fileID: 1702258009}
+  topStageLimit: {fileID: 1284090584}
+  backdrop: {fileID: 1412521462}
 --- !u!4 &1812409758
 Transform:
   m_ObjectHideFlags: 0

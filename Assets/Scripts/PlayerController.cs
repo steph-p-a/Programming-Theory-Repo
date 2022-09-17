@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
 
 
     private Transform m_muzzle;
-    private const float ProjectileSpeed = 10.0f;
     private const float AzimuthMin = -60.0f;
     private const float AzimuthMax = 60.0f;
     private const float ElevationMin = 40.0f;
@@ -27,9 +26,16 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Missing Muzzle GameObject");
         }
-        if (projectilePrefab.GetComponent<Rigidbody>() == null)
+        if (projectilePrefab)
         {
-            Debug.LogError("ProjectilePrefab: " + projectilePrefab.name + " does not have a RigidBody component");
+            if (projectilePrefab.GetComponent<Rigidbody>() == null)
+            {
+                Debug.LogError("ProjectilePrefab: " + projectilePrefab.name + " does not have a RigidBody component");
+            }
+        }
+        else
+        {
+            Debug.LogError("PlayerController does not have a projectile prefab");
         }
     }
 
@@ -68,12 +74,7 @@ public class PlayerController : MonoBehaviour
     {
         if (projectilePrefab != null && m_muzzle != null)
         {
-            var newProjectile = Instantiate(projectilePrefab, m_muzzle.position, m_muzzle.rotation);
-            var newProjectileRb = newProjectile.GetComponent<Rigidbody>();
-            if (newProjectileRb != null)
-            {
-                newProjectileRb.AddForce(newProjectile.transform.up * ProjectileSpeed, ForceMode.VelocityChange);
-            }
+            Instantiate(projectilePrefab, m_muzzle.position, m_muzzle.rotation);
         }
     }
 }

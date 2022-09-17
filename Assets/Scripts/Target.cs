@@ -2,19 +2,13 @@
 
 public class Target : MonoBehaviour
 {
-    protected int m_targetXP = 1;
-    public int TargetXP
-    {
-        get { return m_targetXP; }
-        protected set { m_targetXP = value; }
-    }
+    private float Speed;
+    private float LeftBoundary;
+    private float RightBoundary;
 
-    protected int m_targetHP = 1;
-    public int TartgetHP
-    {
-        get { return m_targetHP; }
-        protected set { m_targetHP = value; }
-    }
+    public int TargetXP { get; protected set; }
+    public int TargetHP { get; protected set; }
+
     public enum Direction
     {
         None,
@@ -24,12 +18,19 @@ public class Target : MonoBehaviour
     }
     public Direction MoveDirection { get; set; }
 
+    protected virtual void Awake()
+    {
+        TargetXP = 1;
+        TargetHP = 1;
+    }
 
-    protected const float Speed = 1.0f;
-    private const float LeftBoundary = -4.5f;
-    private const float RightBoundary = 4.5f;
+    private void Start()
+    {
+        Speed = GameManager.Instance.TargetsSpeed;
+        LeftBoundary = GameManager.Instance.LeftBoundary;
+        RightBoundary = GameManager.Instance.RightBoundary;
+    }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
@@ -63,7 +64,7 @@ public class Target : MonoBehaviour
     protected void Hit()
     {
         LoseHP(1);
-        if (m_targetHP <= 0)
+        if (TargetHP <= 0)
         {
             GameManager.Instance.AddScore(TargetXP);
             Destroy(gameObject);
@@ -73,6 +74,6 @@ public class Target : MonoBehaviour
     // The inherited classes will overload LoseHP
     public virtual void LoseHP(int hp)
     {
-        m_targetHP -= hp;
+        TargetHP -= hp;
     }
 }
