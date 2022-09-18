@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// INHERITANCE : MegaTarget is a variant of the regular Target. On impact, it sends rockets in four directions
 public class MegaTarget : Target
 {
     [SerializeField] private GameObject rocketPrefab;
@@ -27,6 +28,8 @@ public class MegaTarget : Target
         return new Vector3(position.x, position.y + offset, position.z);
     }
 
+    // INHERITANCE: this method overrides the protected method is the base class Target
+    // POLYMORPHISM: see the Target class for how it uses the LoseHP method without having to know the derived class
     // When a MegaTarget loses all its HP, it sends rockets in four directions
     public override void LoseHP(int hp)
     {

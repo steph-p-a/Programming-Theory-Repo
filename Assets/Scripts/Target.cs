@@ -6,6 +6,7 @@ public class Target : MonoBehaviour
     private float LeftBoundary;
     private float RightBoundary;
 
+    // ENCAPSULATION : nobody can modify the Target's XP value or current HP but classes of the Target hierarachy.
     public int TargetXP { get; protected set; }
     public int TargetHP { get; protected set; }
 
@@ -63,6 +64,9 @@ public class Target : MonoBehaviour
 
     protected void Hit()
     {
+        // POLYMORPHISM : Here we call the 'LoseHP' method. Which one will be called? Target.LoseHP? MegaTarget.LoseHP? ExplodingTarget.LoseHP?
+        // We don't know, and that is what polymorphism is about. We can use derived classes as if they were the base class. Polymorphism will
+        // take care of findind the real object's implementation method.
         LoseHP(1);
         if (TargetHP <= 0)
         {
