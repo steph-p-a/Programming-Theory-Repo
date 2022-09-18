@@ -13,15 +13,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject topStageLimit;
     [SerializeField] GameObject backdrop;
 
-    private readonly float[] m_targetYPositions = { 1.0f, 2.0f, 3.0f };
     private const float BackdropOffset = 0.08f;
-    private float TargetZPosition;
 
     public float TargetsSpeed { get; private set; } = 1.0f;
     public float LeftBoundary { get; private set; }
     public float RightBoundary { get; private set; }
     public float TopBoundary { get; private set; }
     public float BottomBoundary { get; private set; }
+    public float TargetZPosition { get; private set; }
 
     private void Awake()
     {
@@ -167,7 +166,5 @@ public class GameManager : MonoBehaviour
             }
             rowIndex++;
         }
-
-
     }
 }
