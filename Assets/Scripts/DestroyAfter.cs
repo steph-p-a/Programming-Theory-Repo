@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class DestroyAfter : MonoBehaviour
 {
-    private const float ProjectileLifetime = 1.0f;
+    private const float LifeTime = 1.0f;
 
     private IEnumerator m_coroutine;
 
     // Start a Coroutine to destroy the game object in X seconds
     void Start()
     {
-        m_coroutine = DestroyAfterCoroutine(ProjectileLifetime);
+        m_coroutine = DestroyAfterCoroutine(LifeTime);
 
         StartCoroutine(m_coroutine);
     }
