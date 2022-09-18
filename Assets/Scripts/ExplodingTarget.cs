@@ -2,6 +2,7 @@
 
 [RequireComponent(typeof(MeshRenderer))]
 
+// INHERITANCE : ExplodingTarget is a variant of the regular Target. After 2 impacts it destroys everything in a 1.5 unit radius.
 public class ExplodingTarget : Target
 {
     [SerializeField] private Material altMaterial;
@@ -35,6 +36,8 @@ public class ExplodingTarget : Target
         }
     }
 
+    // INHERITANCE: this method overrides the protected method is the base class Target
+    // POLYMORPHISM: see the Target class for how it uses the LoseHP method without having to know the derived class
     public override void LoseHP(int hp)
     {
         base.LoseHP(hp);
