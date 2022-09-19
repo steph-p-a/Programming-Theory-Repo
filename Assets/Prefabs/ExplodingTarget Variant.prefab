@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3532211124589287013, guid: 35b7864ad5db56445827e65a650dd5e2, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 39a4b2a4039ba2c48a8ebfcffa7e27b1, type: 2}
     - target: {fileID: 3943811101758982868, guid: 35b7864ad5db56445827e65a650dd5e2, type: 3}
       propertyPath: m_Name
       value: ExplodingTarget Variant
@@ -75,5 +79,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c50b8387dbc0c64492f2569f588b57b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  altMaterial: {fileID: 2100000, guid: 350ce2f9fb0b5cd46a8b6e5a66c383b7, type: 2}
+  altMaterial: {fileID: 2100000, guid: 2e84ac214a792bc45b621ccfd40c61e3, type: 2}
   explosionPrefab: {fileID: 6104115887810496777, guid: 9cdd6741b4c6f3d40aff13f39a0f9a6f, type: 3}

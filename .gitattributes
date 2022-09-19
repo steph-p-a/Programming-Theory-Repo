@@ -69,7 +69,6 @@ ProjectSettings/*.asset text
 *.ogg filter=lfs diff=lfs merge=lfs -text
 
 # Unity data files to leave in LF format
-* text=auto
 *.cs text eol=crlf
 *.prefab text eol=lf
 *.inputactions text eol=lf
