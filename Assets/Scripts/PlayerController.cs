@@ -3,8 +3,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] float elevationSpeed;
-    [SerializeField] float azimuthSpeed;
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] GameObject crosshair;
 
@@ -12,9 +10,18 @@ public class PlayerController : MonoBehaviour
 
     private const float AzimuthMin = -60.0f;
     private const float AzimuthMax = 60.0f;
+    private const float AzimuthMaxSpeed = 120.0f;
+    private const float AzimuthAcceleration = 120.0f;
     private const float ElevationMin = 40.0f;
     private const float ElevationMax = 95.0f;
+    private const float ElevationMaxSpeed = 120.0f;
+    private const float ElevationAcceleration = 120.0f;
+
     private const float ProjectileSpeed = 10.0f;
+
+
+    private float m_AzimuthSpeed;
+    private float m_ElevationSpeed;
     private float m_Azimuth; // Rotation in Euleur degrees around the Y axis, where axis Z is 0
     private float m_Elevation; // Angle in Euleur degrees from the Y axis toward the XZ plane, where the Y axis is 0
                                // Normally elevation is degrees above horizon (XZ plane), but in Unity 0 deg is 'up'.
@@ -65,13 +72,17 @@ public class PlayerController : MonoBehaviour
 
     private void Rotate(Vector2 rotationInput)
     {
-        var scaledElevationSpeed = elevationSpeed * Time.deltaTime;
-        var scaledAzimuthSpeed = azimuthSpeed * Time.deltaTime;
-
-        m_Azimuth += rotationInput.x * scaledAzimuthSpeed;
-        m_Azimuth = Mathf.Clamp(m_Azimuth, AzimuthMin, AzimuthMax);
-        m_Elevation += rotationInput.y * scaledElevationSpeed;
+        float targetElevationSpeed = rotationInput.y * ElevationMaxSpeed;
+        m_ElevationSpeed += (targetElevationSpeed - m_ElevationSpeed) * ElevationAcceleration * Time.deltaTime;
+        m_ElevationSpeed = Mathf.Clamp(m_ElevationSpeed, -ElevationMaxSpeed, ElevationMaxSpeed);
+        m_Elevation += m_ElevationSpeed * Time.deltaTime;
         m_Elevation = Mathf.Clamp(m_Elevation, ElevationMin, ElevationMax);
+
+        float targetAzimuthSpeed = rotationInput.x * AzimuthMaxSpeed;
+        m_AzimuthSpeed += (targetAzimuthSpeed - m_AzimuthSpeed) * AzimuthAcceleration * Time.deltaTime;
+        m_AzimuthSpeed = Mathf.Clamp(m_AzimuthSpeed, -AzimuthMaxSpeed, AzimuthMaxSpeed);
+        m_Azimuth += m_AzimuthSpeed * Time.deltaTime;
+        m_Azimuth = Mathf.Clamp(m_Azimuth, AzimuthMin, AzimuthMax);
 
         transform.rotation = Quaternion.Euler(m_Elevation, m_Azimuth, 0.0f);
     }
@@ -112,8 +123,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 projectileSpeedVector = m_muzzle.transform.TransformDirection(Vector3.up) * ProjectileSpeed;
 
-        RaycastHit hit;
-        if (Physics.Raycast(m_muzzle.transform.position, projectileSpeedVector, out hit))
+        if (Physics.Raycast(m_muzzle.transform.position, projectileSpeedVector, out RaycastHit hit))
         {
             float projectileSpeedXZ = Vector3.ProjectOnPlane(projectileSpeedVector, Vector3.up).magnitude;
 
