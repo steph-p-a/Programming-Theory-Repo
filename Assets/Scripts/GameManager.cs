@@ -169,11 +169,6 @@ public class GameManager : MonoBehaviour
         return targetPrefabs[probs.Length - 1];
     }
 
-    private void CreateMegaTarget()
-    {
-        var targetGameObject = Instantiate(targetPrefabs[1], new Vector3(0, 2, TargetZPosition), targetPrefabs[0].transform.rotation);
-    }
-
     private void CreateTargets()
     {
         int rowIndex = 0;
