@@ -14,11 +14,10 @@ public class PlayerController : MonoBehaviour
     private const float AzimuthAcceleration = 120.0f;
     private const float ElevationMin = 40.0f;
     private const float ElevationMax = 95.0f;
-    private const float ElevationMaxSpeed = 120.0f;
-    private const float ElevationAcceleration = 120.0f;
+    private const float ElevationMaxSpeed = 60.0f;
+    private const float ElevationAcceleration = 60.0f;
 
     private const float ProjectileSpeed = 10.0f;
-
 
     private float m_AzimuthSpeed;
     private float m_ElevationSpeed;
@@ -27,6 +26,9 @@ public class PlayerController : MonoBehaviour
                                // Normally elevation is degrees above horizon (XZ plane), but in Unity 0 deg is 'up'.
 
     private Vector2 m_RotationInput; // .x controls the azimuth, .y controls the elevation
+
+
+    private Plane m_Plane; // Used as a reference for crosshair prediction
 
     void Start()
     {
@@ -49,6 +51,8 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("PlayerController does not have a projectile prefab");
         }
+
+        m_Plane = new Plane(Vector3.back, GameManager.Instance.TargetZPosition);
     }
 
     void Update()
@@ -92,7 +96,9 @@ public class PlayerController : MonoBehaviour
         if (projectilePrefab != null && m_muzzle != null)
         {
             var projectile = Instantiate(projectilePrefab, m_muzzle.position, m_muzzle.rotation);
-            projectile.GetComponent<Rigidbody>().AddForce(transform.up * ProjectileSpeed, ForceMode.VelocityChange);
+            var projectileSpeedVector = m_muzzle.transform.TransformDirection(Vector3.up) * ProjectileSpeed;
+            projectile.GetComponent<Rigidbody>().velocity = projectileSpeedVector;
+
         }
     }
 
@@ -121,19 +127,22 @@ public class PlayerController : MonoBehaviour
      */
     private void DrawCrosshair3D()
     {
+        // the muzzle's 'up' is the direction it is pointing
         Vector3 projectileSpeedVector = m_muzzle.transform.TransformDirection(Vector3.up) * ProjectileSpeed;
 
-        if (Physics.Raycast(m_muzzle.transform.position, projectileSpeedVector, out RaycastHit hit))
+        Ray ray = new Ray(m_muzzle.transform.position, projectileSpeedVector.normalized);
+        if (m_Plane.Raycast(ray, out float intersect))
         {
             float projectileSpeedXZ = Vector3.ProjectOnPlane(projectileSpeedVector, Vector3.up).magnitude;
+            var hit = ray.GetPoint(intersect);
 
             if (projectileSpeedXZ != 0.0f)
             {
-                var deltaT = hit.distance / projectileSpeedXZ;
-
+                var deltaT = intersect / projectileSpeedXZ;
                 var y = m_muzzle.transform.position.y + (projectileSpeedVector.y * deltaT) + (0.5 * Physics.gravity.y * deltaT * deltaT);
-                crosshair.transform.position = new Vector3(hit.point.x, (float)y, hit.point.z);
+                crosshair.transform.position = new Vector3(hit.x, (float)y, hit.z - 0.03f);
             }
         }
+
     }
 }
