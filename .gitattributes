@@ -88,3 +88,5 @@ ProjectSettings/*.asset text
 *.mat text eol=lf
 *.mask text eol=lf
 *.spriteatlas text eol=lf
+*.shader text eol=lf
+*.cginc text eol=lf

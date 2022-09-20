@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     public int Score { get; private set; }
+    public float TimeLeft { get; private set; }
+    public bool IsGameRunning { get; private set; }
 
     [SerializeField] GameObject[] targetPrefabs;
     [SerializeField] float[] targetProbs;
@@ -13,10 +16,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject bottomStageLimit;
     [SerializeField] GameObject topStageLimit;
     [SerializeField] GameObject backdrop;
+    [SerializeField] TextMeshProUGUI scoreField;
+    [SerializeField] TextMeshProUGUI timeField;
+    [SerializeField] TextMeshProUGUI gameOver;
+
 
     private const float BackdropOffset = 0.08f;
+    private const float GameTime = 60.0f;
+    private float startTime;
 
-    public float TargetsSpeed { get; private set; } = 1.0f;
+    private int m_Stage;
+    public int m_TargetCount;
+
+    public float TargetsSpeed { get; private set; }
     public float LeftBoundary { get; private set; }
     public float RightBoundary { get; private set; }
     public float TopBoundary { get; private set; }
@@ -37,7 +49,14 @@ public class GameManager : MonoBehaviour
 
         ValidateSerializedFields();
         SetupStageBoundaries();
+        Score = 0;
+        TimeLeft = GameTime;
+        m_Stage = 0;
+        TargetsSpeed = 0;
+        m_TargetCount = 0;
 
+        DisplayScore();
+        DisplayTime();
     }
 
     // It is not going to work if these are not defined
@@ -85,6 +104,18 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("GameManager does not have a backdrop");
         }
+        if (!scoreField)
+        {
+            Debug.LogError("GameManager does not have a scoreField");
+        }
+        if (!timeField)
+        {
+            Debug.LogError("GameManager does not have a timeField");
+        }
+        if (!gameOver)
+        {
+            Debug.LogError("GameManager does not have a gameOver");
+        }
     }
 
     // Calculate the stage limits based on the surrounding objects
@@ -119,14 +150,62 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    private void DisplayScore()
     {
-        CreateTargets();
+        scoreField.text = Score.ToString();
     }
 
+    private void DisplayTime()
+    {
+        timeField.text = Mathf.CeilToInt(TimeLeft).ToString();
+    }
+
+    void Start()
+    {
+        NextLevel();
+        startTime = Time.time;
+        IsGameRunning = true;
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsGameRunning)
+        {
+            TimeLeft = startTime + GameTime - Time.time;
+            DisplayTime();
+            if (TimeLeft <= 0.0f)
+            {
+                GameOver();
+            }
+            if (m_TargetCount == 0)
+            {
+                NextLevel();
+            }
+        }
+    }
+
+    private void GameOver()
+    {
+        IsGameRunning = false;
+        gameOver.gameObject.SetActive(true);
+
+    }
+
+    private void NextLevel()
+    {
+        m_Stage++;
+        TargetsSpeed = m_Stage;
+        CreateTargets(m_Stage);
+    }
     public void AddScore(int score)
     {
-        Score += score;
+        if (IsGameRunning)
+        {
+            Score += score;
+            m_TargetCount--;
+            DisplayScore();
+        }
     }
 
     private List<float> CreateEvenSpread(float size, float minDistance, float startingValue = 0.0f)
@@ -169,10 +248,10 @@ public class GameManager : MonoBehaviour
         return targetPrefabs[probs.Length - 1];
     }
 
-    private void CreateTargets()
+    private void CreateTargets(float distance)
     {
         int rowIndex = 0;
-        List<float> horizontalSpread = CreateEvenSpread(RightBoundary - LeftBoundary, 1.0f, LeftBoundary);
+        List<float> horizontalSpread = CreateEvenSpread(RightBoundary - LeftBoundary, distance, LeftBoundary);
         List<float> verticalSpead = CreateEvenSpread(TopBoundary - BottomBoundary, 1.0f, BottomBoundary + 0.5f);
 
         // Create a grid of targets
@@ -181,6 +260,7 @@ public class GameManager : MonoBehaviour
             foreach (float x in horizontalSpread)
             {
                 var targetGameObject = Instantiate(ChooseTarget(targetProbs), new Vector3(x, y, TargetZPosition), targetPrefabs[0].transform.rotation);
+                m_TargetCount++;
 
                 var target = targetGameObject.GetComponent<Target>();
                 if (target)
