@@ -2,7 +2,6 @@
 
 public class Target : MonoBehaviour
 {
-    private float Speed;
     private float LeftBoundary;
     private float RightBoundary;
 
@@ -27,7 +26,6 @@ public class Target : MonoBehaviour
 
     protected virtual void Start()
     {
-        Speed = GameManager.Instance.TargetsSpeed;
         LeftBoundary = GameManager.Instance.LeftBoundary;
         RightBoundary = GameManager.Instance.RightBoundary;
     }
@@ -39,8 +37,10 @@ public class Target : MonoBehaviour
 
     private void Move()
     {
+        var Speed = GameManager.Instance.TargetsSpeed;
         if (MoveDirection == Direction.Left)
         {
+
             transform.Translate(-Speed * Time.deltaTime, 0, 0);
             if (transform.position.x < LeftBoundary)
             {

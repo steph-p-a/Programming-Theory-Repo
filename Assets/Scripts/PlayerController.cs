@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
+        if (GameManager.Instance.IsGameRunning && context.phase == InputActionPhase.Performed)
         {
             Fire();
         }
