@@ -36,12 +36,12 @@ public class MegaTarget : Target
         base.LoseHP(hp);
         if (TargetHP <= 0)
         {
-            // Lauch the rocket just a little off the target so we don't have to check for unnecessary collisions
-            const float offset = 0.10f;
+            // Lauch the rocket just a little off so they don't collide with one another
+            const float offset = 0.15f;
             LauchRocket(YOffset(transform.position, offset), new Vector3(0, 0, 0));    // Up
-            LauchRocket(XOffset(transform.position, offset), new Vector3(0, 0, 90));   // Right            
+            LauchRocket(XOffset(transform.position, -offset), new Vector3(0, 0, 90));   // Left
             LauchRocket(YOffset(transform.position, -offset), new Vector3(0, 0, 180)); // Down    
-            LauchRocket(XOffset(transform.position, -offset), new Vector3(0, 0, 270)); // Left
+            LauchRocket(XOffset(transform.position, offset), new Vector3(0, 0, 270)); // Right
         }
     }
 }
