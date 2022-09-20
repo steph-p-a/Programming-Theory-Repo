@@ -1383,6 +1383,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPrefabs:
   - {fileID: 3943811101758982868, guid: 35b7864ad5db56445827e65a650dd5e2, type: 3}
+  - {fileID: 2289128213890831490, guid: f98013f4974f5554698314ef36512d30, type: 3}
+  - {fileID: 844819052812645650, guid: 30c1823349cdd1b4188ee1ba9c93fb1e, type: 3}
+  targetProbs:
+  - 80
+  - 10
+  - 10
   leftStageLimit: {fileID: 773526074}
   rightStageLimit: {fileID: 1164951581}
   bottomStageLimit: {fileID: 1702258009}
@@ -1401,7 +1407,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1854263183
 GameObject:
@@ -1445,7 +1451,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1552746187169431846, guid: 6c3538b9881cd384bb340492498a5985, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1552746187169431846, guid: 6c3538b9881cd384bb340492498a5985, type: 3}
       propertyPath: m_LocalScale.y

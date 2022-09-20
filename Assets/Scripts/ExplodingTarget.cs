@@ -16,8 +16,10 @@ public class ExplodingTarget : Target
         TargetHP = 2;
     }
 
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (explosionPrefab == null)
         {
             Debug.LogError("ExplodingTarget does not have an explosion prefab");

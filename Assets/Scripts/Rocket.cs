@@ -4,7 +4,7 @@
 
 public class Rocket : MonoBehaviour
 {
-    private const float RocketSpeed = 10.0f;
+    private const float RocketSpeed = 3.0f;
 
     private void Start()
     {
@@ -12,8 +12,14 @@ public class Rocket : MonoBehaviour
 
         rb.AddForce(transform.up * RocketSpeed, ForceMode.VelocityChange);
     }
+
+
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+        if (collision.transform != transform.parent)
+        {
+            Destroy(gameObject);
+        }
     }
+
 }

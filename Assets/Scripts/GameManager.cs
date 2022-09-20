@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public int Score { get; private set; }
 
     [SerializeField] GameObject[] targetPrefabs;
+    [SerializeField] float[] targetProbs;
     [SerializeField] GameObject leftStageLimit;
     [SerializeField] GameObject rightStageLimit;
     [SerializeField] GameObject bottomStageLimit;
@@ -54,6 +55,10 @@ public class GameManager : MonoBehaviour
             {
                 Debug.LogError("TargetPrefab: " + targetPrefabs[i].name + " does not have the Target class");
             }
+        }
+        if (targetProbs.Length != targetPrefabs.Length)
+        {
+            Debug.LogError("GameManager targetProbs and targetPrefabs length do not match");
         }
 
         if (!leftStageLimit)
@@ -138,6 +143,37 @@ public class GameManager : MonoBehaviour
         return list;
     }
 
+    GameObject ChooseTarget(float[] probs)
+    {
+
+        float total = 0;
+
+        foreach (float elem in probs)
+        {
+            total += elem;
+        }
+
+        float randomPoint = Random.value * total;
+
+        for (int i = 0; i < probs.Length; i++)
+        {
+            if (randomPoint < probs[i])
+            {
+                return targetPrefabs[i];
+            }
+            else
+            {
+                randomPoint -= probs[i];
+            }
+        }
+        return targetPrefabs[probs.Length - 1];
+    }
+
+    private void CreateMegaTarget()
+    {
+        var targetGameObject = Instantiate(targetPrefabs[1], new Vector3(0, 2, TargetZPosition), targetPrefabs[0].transform.rotation);
+    }
+
     private void CreateTargets()
     {
         int rowIndex = 0;
@@ -149,7 +185,7 @@ public class GameManager : MonoBehaviour
         {
             foreach (float x in horizontalSpread)
             {
-                var targetGameObject = Instantiate(targetPrefabs[0], new Vector3(x, y, TargetZPosition), targetPrefabs[0].transform.rotation);
+                var targetGameObject = Instantiate(ChooseTarget(targetProbs), new Vector3(x, y, TargetZPosition), targetPrefabs[0].transform.rotation);
 
                 var target = targetGameObject.GetComponent<Target>();
                 if (target)

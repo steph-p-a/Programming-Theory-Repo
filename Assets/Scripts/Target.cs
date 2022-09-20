@@ -25,19 +25,19 @@ public class Target : MonoBehaviour
         TargetHP = 1;
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         Speed = GameManager.Instance.TargetsSpeed;
         LeftBoundary = GameManager.Instance.LeftBoundary;
         RightBoundary = GameManager.Instance.RightBoundary;
     }
 
-    void Update()
+    protected virtual void Update()
     {
         Move();
     }
 
-    void Move()
+    private void Move()
     {
         if (MoveDirection == Direction.Left)
         {
