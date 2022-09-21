@@ -2,6 +2,7 @@
 
 public class Target : MonoBehaviour
 {
+    [SerializeField] protected AudioClip audioClip;
     private float LeftBoundary;
     private float RightBoundary;
 
@@ -71,6 +72,7 @@ public class Target : MonoBehaviour
         if (TargetHP <= 0)
         {
             GameManager.Instance.AddScore(TargetXP);
+            GameManager.Instance.PlayClip(audioClip);
             Destroy(gameObject);
         }
     }

@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c50b8387dbc0c64492f2569f588b57b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: 2a921313c927f45238a0b8baabe3ab12, type: 3}
   altMaterial: {fileID: 2100000, guid: 2e84ac214a792bc45b621ccfd40c61e3, type: 2}
   explosionPrefab: {fileID: 6104115887810496777, guid: 9cdd6741b4c6f3d40aff13f39a0f9a6f, type: 3}
   explosionParticles: {fileID: 3114576169011715634, guid: bba6ac0f32205c04a9c47bcdbcb848c3, type: 3}

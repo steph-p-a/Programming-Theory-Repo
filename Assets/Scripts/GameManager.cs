@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -38,6 +40,11 @@ public class GameManager : MonoBehaviour
     public float TopBoundary { get; private set; }
     public float BottomBoundary { get; private set; }
     public float TargetZPosition { get; private set; }
+
+    public void PlayClip(AudioClip clip)
+    {
+        GetComponent<AudioSource>().PlayOneShot(clip);
+    }
 
     private void Awake()
     {
