@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,10 +21,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI scoreField;
     [SerializeField] TextMeshProUGUI timeField;
     [SerializeField] TextMeshProUGUI gameOver;
+    [SerializeField] TextMeshProUGUI finalScore;
 
 
     private const float BackdropOffset = 0.08f;
     private const float GameTime = 60.0f;
+    private const float GameOverDelay = 3.0f;
     private float startTime;
 
     private int m_Stage;
@@ -44,19 +48,9 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        Score = 0;
-        DontDestroyOnLoad(gameObject);
 
         ValidateSerializedFields();
         SetupStageBoundaries();
-        Score = 0;
-        TimeLeft = GameTime;
-        m_Stage = 0;
-        TargetsSpeed = 0;
-        m_TargetCount = 0;
-
-        DisplayScore();
-        DisplayTime();
     }
 
     // It is not going to work if these are not defined
@@ -116,6 +110,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("GameManager does not have a gameOver");
         }
+        if (!gameOver)
+        {
+            Debug.LogError("GameManager does not have a finalScore");
+        }
     }
 
     // Calculate the stage limits based on the surrounding objects
@@ -162,10 +160,22 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        gameOver.gameObject.SetActive(false);
+
+        m_TargetCount = 0;
+
+        m_Stage = 0;
+        TargetsSpeed = 0;
+
+        Score = 0;
+        DisplayScore();
+
+        TimeLeft = GameTime;
+        DisplayTime();
+
         NextLevel();
         startTime = Time.time;
         IsGameRunning = true;
-
     }
 
     private void FixedUpdate()
@@ -185,11 +195,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    IEnumerator ReturnToMenu()
+    {
+        yield return new WaitForSeconds(GameOverDelay);
+        SceneManager.LoadScene(0);
+    }
+
     private void GameOver()
     {
         IsGameRunning = false;
         gameOver.gameObject.SetActive(true);
-
+        finalScore.text = Score.ToString();
+        StartCoroutine(nameof(ReturnToMenu));
     }
 
     private void NextLevel()
