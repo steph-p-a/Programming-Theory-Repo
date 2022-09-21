@@ -7,6 +7,7 @@ public class ExplodingTarget : Target
 {
     [SerializeField] private Material altMaterial;
     [SerializeField] private GameObject explosionPrefab;
+    [SerializeField] private GameObject explosionParticles;
 
     protected override void Awake()
     {
@@ -28,6 +29,10 @@ public class ExplodingTarget : Target
         {
             Debug.LogError("ExplodingTarget does not have altMaterial");
         }
+        if (explosionParticles == null)
+        {
+            Debug.LogError("ExplodingTarget does not have explosionParticles");
+        }
     }
 
     void Explode()
@@ -35,6 +40,10 @@ public class ExplodingTarget : Target
         if (explosionPrefab)
         {
             Instantiate(explosionPrefab, gameObject.transform.position, gameObject.transform.rotation);
+        }
+        if (explosionParticles)
+        {
+            Instantiate(explosionParticles, gameObject.transform.position, gameObject.transform.rotation);
         }
     }
 
