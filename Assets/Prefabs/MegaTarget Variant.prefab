@@ -95,4 +95,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75ac026c257c49a46acff7f85ec30092, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioClip: {fileID: 8300000, guid: b9f0c283bed9b4ce29f3ba7ca4c2edc4, type: 3}
   rocketPrefab: {fileID: 8886090922867065548, guid: daf447e980b52904196a5d9e4cc6ceb4, type: 3}

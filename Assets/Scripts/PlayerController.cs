@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] GameObject projectilePrefab;
@@ -103,6 +105,7 @@ public class PlayerController : MonoBehaviour
             var projectile = Instantiate(projectilePrefab, m_muzzle.position, m_muzzle.rotation);
             var projectileSpeedVector = m_muzzle.transform.TransformDirection(Vector3.up) * ProjectileSpeed;
             projectile.GetComponent<Rigidbody>().velocity = projectileSpeedVector;
+            GetComponent<AudioSource>().Play();
         }
         if (gunSmoke && m_muzzle)
         {
