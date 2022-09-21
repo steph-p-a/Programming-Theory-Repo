@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] GameObject crosshair;
+    [SerializeField] GameObject gunSmoke;
 
     private Transform m_muzzle;
 
@@ -50,6 +51,10 @@ public class PlayerController : MonoBehaviour
         else
         {
             Debug.LogError("PlayerController does not have a projectile prefab");
+        }
+        if (gunSmoke == null)
+        {
+            Debug.LogError("PlayerController does not have gunSmoke");
         }
 
         m_Plane = new Plane(Vector3.back, GameManager.Instance.TargetZPosition);
@@ -98,7 +103,10 @@ public class PlayerController : MonoBehaviour
             var projectile = Instantiate(projectilePrefab, m_muzzle.position, m_muzzle.rotation);
             var projectileSpeedVector = m_muzzle.transform.TransformDirection(Vector3.up) * ProjectileSpeed;
             projectile.GetComponent<Rigidbody>().velocity = projectileSpeedVector;
-
+        }
+        if (gunSmoke && m_muzzle)
+        {
+            Instantiate(gunSmoke, m_muzzle.position, m_muzzle.rotation);
         }
     }
 

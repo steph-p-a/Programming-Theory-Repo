@@ -81,3 +81,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   altMaterial: {fileID: 2100000, guid: 2e84ac214a792bc45b621ccfd40c61e3, type: 2}
   explosionPrefab: {fileID: 6104115887810496777, guid: 9cdd6741b4c6f3d40aff13f39a0f9a6f, type: 3}
+  explosionParticles: {fileID: 3114576169011715634, guid: bba6ac0f32205c04a9c47bcdbcb848c3, type: 3}
