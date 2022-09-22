@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour
      * Assumptions:
      *   - the drag on the projectile is negligible, thus ignored
      *   - the gravity is toward negative Y axis
-     *   - "Muzzle" being a cylinder, it's the direction of the long axis is 'up'
+     *   - "Muzzle" being a cylinder, its direction of the long axis is 'up'
      *   - The hit location normal is always in the -Z direction, so we don't need to rotate the crosshair image.
      * 
      * These assumptions allow us to use a Raycast to find where we hit in the XZ plane.
@@ -128,7 +128,7 @@ public class PlayerController : MonoBehaviour
      * to reach that point. And with the time we can calculate y(t).
      * 
      * Note: It would also have been possible to calculate y(z) instead, so we would not have to mind about time. But the 
-     * projectile equitions are generally better know in the y(t) format.
+     * projectile equations are generally better known in the y(t) format.
      * 
      * DrawCrosshair3D uses eliptical projectile equation: y(t) = y0 + (initialSpeed.y * t) + (1/2 * g * t * t);
      * Where y0 is the y component of the muzzle position

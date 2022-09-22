@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-// INHERITANCE : MegaTarget is a variant of the regular Target. On impact, it sends rockets in four directions
+// INHERITANCE : MegaTarget is a variant of the regular
+// Target. On impact, it sends rockets in four directions
 public class MegaTarget : Target
 {
     [SerializeField] private GameObject rocketPrefab;
