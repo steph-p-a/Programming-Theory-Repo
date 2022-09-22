@@ -2,7 +2,8 @@
 
 [RequireComponent(typeof(MeshRenderer))]
 
-// INHERITANCE : ExplodingTarget is a variant of the regular Target. After 2 impacts it destroys everything in a 1.5 unit radius.
+// INHERITANCE : ExplodingTarget is a variant of the regular Target.
+// After 2 impacts it destroys everything in a 1.5 unit radius.
 public class ExplodingTarget : Target
 {
     [SerializeField] private Material altMaterial;
