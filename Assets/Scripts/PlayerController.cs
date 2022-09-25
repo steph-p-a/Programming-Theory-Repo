@@ -2,20 +2,20 @@
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(AudioSource))]
-
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] GameObject projectilePrefab;
     [SerializeField] GameObject crosshair;
     [SerializeField] GameObject gunSmoke;
-
+    private Rigidbody playerRB;
     private Transform m_muzzle;
 
-    private const float AzimuthMin = -60.0f;
-    private const float AzimuthMax = 60.0f;
+    private const float AzimuthMin = -120.0f;
+    private const float AzimuthMax = 120.0f;
     private const float AzimuthMaxSpeed = 120.0f;
     private const float AzimuthAcceleration = 120.0f;
-    private const float ElevationMin = 40.0f;
+    private const float ElevationMin = 42.5f;
     private const float ElevationMax = 95.0f;
     private const float ElevationMaxSpeed = 60.0f;
     private const float ElevationAcceleration = 60.0f;
@@ -60,9 +60,11 @@ public class PlayerController : MonoBehaviour
         }
 
         m_Plane = new Plane(Vector3.back, GameManager.Instance.TargetZPosition);
+
+        playerRB = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         Rotate(m_RotationInput);
         DrawCrosshair3D();
@@ -83,20 +85,58 @@ public class PlayerController : MonoBehaviour
 
     private void Rotate(Vector2 rotationInput)
     {
-        float targetElevationSpeed = rotationInput.y * ElevationMaxSpeed;
-        m_ElevationSpeed += (targetElevationSpeed - m_ElevationSpeed) * ElevationAcceleration * Time.deltaTime;
-        m_ElevationSpeed = Mathf.Clamp(m_ElevationSpeed, -ElevationMaxSpeed, ElevationMaxSpeed);
-        m_Elevation += m_ElevationSpeed * Time.deltaTime;
-        m_Elevation = Mathf.Clamp(m_Elevation, ElevationMin, ElevationMax);
+        Quaternion q = playerRB.rotation;
+        q.x /= q.w;
+        q.y /= q.w;
+        q.z /= q.w;
+        q.w = 1.0f;
 
-        float targetAzimuthSpeed = rotationInput.x * AzimuthMaxSpeed;
-        m_AzimuthSpeed += (targetAzimuthSpeed - m_AzimuthSpeed) * AzimuthAcceleration * Time.deltaTime;
-        m_AzimuthSpeed = Mathf.Clamp(m_AzimuthSpeed, -AzimuthMaxSpeed, AzimuthMaxSpeed);
-        m_Azimuth += m_AzimuthSpeed * Time.deltaTime;
-        m_Azimuth = Mathf.Clamp(m_Azimuth, AzimuthMin, AzimuthMax);
+        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
+        angleX = Mathf.Clamp(angleX, ElevationMin, ElevationMax);
+        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
 
-        transform.rotation = Quaternion.Euler(m_Elevation, m_Azimuth, 0.0f);
+        float angleY = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.y);
+        if (angleY > 180)
+        {
+            angleY = 360 - angleY;
+        }
+        angleY = Mathf.Clamp(angleY, AzimuthMin, AzimuthMax);
+        q.y = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleY);
+
+        q.z = 0;
+        q.Normalize();
+
+        playerRB.rotation = q;
+
+
+
+        Debug.Log("x:" + angleX + " y: " + angleY + " input: " + rotationInput);
+        Vector3 newAngularVelocity = Vector3.zero;
+
+        if ((rotationInput.y > -0.01 && rotationInput.y < 0.01))
+        {
+            rotationInput.y = 0;
+        }
+        if ((angleX <= ElevationMin && rotationInput.y < 0))
+        {
+            rotationInput.y = 0;
+        }
+        if ((angleX >= ElevationMax && rotationInput.x > 0))
+        {
+            rotationInput.y = 0;
+        }
+        newAngularVelocity.x = (rotationInput.y * ElevationMaxSpeed * Time.fixedDeltaTime) - playerRB.angularVelocity.x;
+
+        if ((rotationInput.x > -0.01 && rotationInput.x < 0.01) || (angleY <= AzimuthMin && rotationInput.x < 0) || (angleY >= AzimuthMax && rotationInput.x > 0))
+        {
+            rotationInput.x = 0;
+        }
+        newAngularVelocity.y = (rotationInput.x * AzimuthMaxSpeed * Time.fixedDeltaTime) - playerRB.angularVelocity.y;
+
+
+        playerRB.AddTorque(newAngularVelocity, ForceMode.VelocityChange);
     }
+
 
     private void Fire()
     {
